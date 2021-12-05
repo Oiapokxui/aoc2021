@@ -9,7 +9,7 @@ object SonarSweep {
     case class sonarTuple (previousMeasurement:Int, numberOfIncreases:Int)
 
     val hasIncreased: (sonarTuple, Int) => sonarTuple = (lastResult, actualDepth) =>
-        if actualDepth - lastResult.previousMeasurement >= 0
+        if actualDepth - lastResult.previousMeasurement > 0
         then sonarTuple(actualDepth, lastResult.numberOfIncreases + 1)
         else sonarTuple(actualDepth, lastResult.numberOfIncreases)
 
@@ -18,28 +18,16 @@ object SonarSweep {
   }
 
   def countIncreasesOfWindows(input: List[Int]): Int = {
-    1
+    countIncreases(getThreeMeasurementsWindows(input, List()))
   }
-  def getThreeMeasurementsWindows(input:List[Int], windowsSum:List[Int]): List[Int] = {
-    type iterations = 0 | 1 | 2 | 3
-    val inputHead::inputTail = input
-
-    lazy val getThreeMeasurementsSum : (List[Int], List[Int], Int) => Int =
-      (input, thisList, elementsInWindowList) =>
-        val emptyInput = input match {
-          case inputHead::inputTail => false
-          case List() => true
-        }
-        if elementsInWindowList == 3 | emptyInput
-        then thisList.reduce(_+_)
-        else
-          val inputHead::inputTail = input
-          getThreeMeasurementsSum(inputTail, inputHead::thisList, elementsInWindowList + 1)
-
-    val thisWindowSum = getThreeMeasurementsSum(input, List(), 0)
-    if inputTail.isEmpty
-    then thisWindowSum::windowsSum
-    else getThreeMeasurementsWindows(inputTail, thisWindowSum::windowsSum)
+ 
+  def getThreeMeasurementsWindows(input:List[Int], windows:List[List[Int]]): List[Int] = {
+    if input.size >= 3
+    then 
+      val head::tail = input
+      getThreeMeasurementsWindows(tail, input.take(3)::windows)
+    else 
+      windows.reverse.map(lista => lista.reduce(_+_))
   }
 
   def run(): Unit = {
@@ -47,7 +35,8 @@ object SonarSweep {
     val inputFile = Scanner(File("./inputs/sonarSweepInput.txt"))
     var input:List[Int] = List()
     while (inputFile.hasNext())  input = inputFile.nextInt() :: input
-    println("Day 1 - Sonar Sweep: " + countIncreases(input.reverse))
-    getThreeMeasurementsWindows(List(1,2,3,3), List())
+    input = input.reverse
+    println("Day 1 - Sonar Sweep First Half: " + countIncreases(input))
+    println("Day 1 - Sonar Sweep Second Half: " + countIncreasesOfWindows(input))
   }
 }
