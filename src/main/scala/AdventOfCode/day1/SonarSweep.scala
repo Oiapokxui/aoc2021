@@ -3,6 +3,7 @@ package AdventOfCode.day1
 import java.io.{BufferedReader, File, FileReader}
 import java.nio.file.Paths
 import java.util.Scanner
+import scala.io.Source
 
 object SonarSweep {
   def countIncreases(input: List[Int]): Int = {
@@ -31,11 +32,8 @@ object SonarSweep {
   }
 
   def run(): Unit = {
-    println(File("./").getCanonicalPath())
     val inputFile = Scanner(File("./inputs/sonarSweepInput.txt"))
-    var input:List[Int] = List()
-    while (inputFile.hasNext())  input = inputFile.nextInt() :: input
-    input = input.reverse
+    val input:List[Int] = Source.fromFile("./inputs/sonarSweepInput.txt").getLines.toList.map(line => Integer.parseInt(line))
     println("Day 1 - Sonar Sweep First Half: " + countIncreases(input))
     println("Day 1 - Sonar Sweep Second Half: " + countIncreasesOfWindows(input))
   }

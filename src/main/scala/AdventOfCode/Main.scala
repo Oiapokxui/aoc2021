@@ -1,7 +1,9 @@
 package AdventOfCode
 import day1.SonarSweep
+import day2.Dive
 
 object Main {
   def main(args: Array[String]): Unit =
-    println(SonarSweep.run())
+    SonarSweep.run()
+    Dive.run()
 }
