@@ -6,9 +6,6 @@ import java.util.Scanner
 import scala.io.Source
 
 object Dive {
-  type Direction = "up" | "down" | "forward" 
-
-  case class Step(direction: Direction, units: Int)
 
   case class DiveVector(horizontalPos: Int, depth: Int, aim: Int) {
     def +(that: DiveVector) = 
